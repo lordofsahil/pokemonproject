@@ -1,0 +1,74 @@
+---
+title: "Pokemon Project"
+output: html_notebook
+description: "This data set was orginally acquired from Kaggle, I cleaned and re edited the data set in a prior r script and in excel to produce this new updated version. This dataset covers pokemon up to gen 7 (sun and moon). I made various plots and found various statistics to derive basic info from."
+---
+
+
+
+```{r}
+
+library(dplyr)
+library(tidyverse)
+library(gmodels)
+library(plotrix)
+
+```
+
+
+```{r}
+pokemon <- read.csv("pokemonreupdate.csv")
+
+pokemon <- pokemon[1:809,]
+#getting rid of bottom, unecessary rows
+
+
+pokemon$gen <- as.factor(pokemon$gen) #needs to be cateogrical
+pokemon$total <- as.numeric(pokemon$total)
+
+cor.test(pokemon$total, pokemon$weightlbs)
+#moderate positive
+cor.test(pokemon$total, pokemon$feet_inches)
+#moderate positive
+sd(pokemon$total, na.rm = TRUE)
+table(pokemon$type1, pokemon$type2)
+n_distinct(pokemon$ability1)
+#number of abilities in Pokemon
+tapply(pokemon$total, pokemon$egg.group1, mean)
+#undiscovered egg groups are most powerful
+
+```
+
+
+```{r}
+
+ggplot(data = pokemon, aes(x = total, y = weightlbs)) + geom_point(aes(size = feet_inches)) + geom_smooth(se = FALSE) + theme(legend.position = "none") + labs(title = "pokemon size and total stats")
+
+
+
+ggplot(data = pokemon, aes(x = gen)) + geom_bar() + labs(title = "Pokemon Gen", x = "Gen", y = "Frequency") + theme(plot.title= element_text(color="blue", size=14, face="bold"))
+
+
+ggplot(data = pokemon, aes(x = attack, y = spattack)) + geom_boxplot()
+ggplot(data = pokemon, aes(x = defense, y = spdefense)) + geom_boxplot()
+
+
+top_types <- pokemon %>%
+  group_by(type1) %>%
+  summarize(maxtotal = max(total), mediantotal = median(total), meantotal = mean(total), mintotal = min(total), na.rm = TRUE) %>%
+  arrange(desc(meantotal)) %>%
+  top_n(5, meantotal)  
+  
+
+
+
+pie3D(top_types$meantotal, labels = top_types$type1, explode = 0.1, main = "Top Pokemon Types")
+
+```
+
+```{r}
+write.table(pokemon, file="pokemonupdated.csv", row.names=F, sep = ",")
+#if you want to export the dataset yourself into your computer
+```
+
+

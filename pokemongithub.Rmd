@@ -7,7 +7,6 @@ description: "This data set was orginally acquired from Kaggle, I cleaned and re
 
 
 ```{r}
-
 library(dplyr)
 library(tidyverse)
 library(gmodels)
@@ -22,7 +21,6 @@ pokemon <- read.csv("pokemonreupdate.csv")
 pokemon <- pokemon[1:809,]
 #getting rid of bottom, unecessary rows
 
-
 pokemon$gen <- as.factor(pokemon$gen) #needs to be cateogrical
 pokemon$total <- as.numeric(pokemon$total)
 
@@ -36,9 +34,7 @@ n_distinct(pokemon$ability1)
 #number of abilities in Pokemon
 tapply(pokemon$total, pokemon$egg.group1, mean)
 #undiscovered egg groups are most powerful
-
 ```
-
 
 ```{r}
 
@@ -60,8 +56,6 @@ top_types <- pokemon %>%
   top_n(5, meantotal)  
   
 
-
-
 pie3D(top_types$meantotal, labels = top_types$type1, explode = 0.1, main = "Top Pokemon Types")
 
 ```
@@ -78,12 +72,7 @@ predict(rmodel, newdata = samp, interval = "prediction", level = .95)
 #ifelse statement based on row number 
 ```
 
-
-
-
 ```{r}
 write.table(pokemon, file="pokemonupdated.csv", row.names=F, sep = ",")
 #if you want to export the dataset yourself into your computer
 ```
-
-

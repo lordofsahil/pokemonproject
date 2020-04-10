@@ -12,7 +12,7 @@ library(dplyr)
 library(tidyverse)
 library(gmodels)
 library(plotrix)
-
+library(lm.beta)
 ```
 
 
@@ -65,6 +65,21 @@ top_types <- pokemon %>%
 pie3D(top_types$meantotal, labels = top_types$type1, explode = 0.1, main = "Top Pokemon Types")
 
 ```
+
+
+```{r}
+#models
+rmodel <- lm(total ~ weightlbs + feet_inches, data = pokemon)
+summary(rmodel)
+lm.beta(rmodel)
+samp = data.frame(weightlbs = 200, feet_inches = 6.01)
+predict(rmodel, newdata = samp, interval = "prediction", level = .95)
+#predictive model
+#ifelse statement based on row number 
+```
+
+
+
 
 ```{r}
 write.table(pokemon, file="pokemonupdated.csv", row.names=F, sep = ",")
